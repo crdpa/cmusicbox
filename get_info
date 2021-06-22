@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#              __
+#  ___________/ /__  ___ _
+# / __/ __/ _  / _ \/ _ `/
+# \__/_/  \_,_/ .__/\_,_/ 
+#            /_/          
+# grab song info for cmusicbox
+
+dir="$HOME/.config/cmus"
+cmusicbox="$HOME/data/dev/python/cmusicbox/cmusicbox.py"
+
+# create file that holds the current song
+if [ ! -d "$dir" ]; then
+    mkdir -p "$dir"
+    echo "" > "$dir"/current_song
+fi
+
+
+# check statuson the second field of the first line of "cmus-remote -Q" output
+status=$(cmus-remote -Q | awk 'FNR == 1 {print $2}')
+
+if [ "$status" = "playing" ] ; then
+    artist=$(cmus-remote -C "format_print '%a'")
+    album=$(cmus-remote -C "format_print '%l'")
+    title=$(cmus-remote -C "format_print '%t'")
+elif [ "$status" = "stopped" ] ; then
+    echo "" > "$dir"/current_song
+    exit 0
+else
+    exit 0
+fi
+
+
+# check if the song is new or it is just resuming a paused song
+# if it is a new song, send to cmusicbox
+current_song=$(cat "$dir"/current_song)
+if [ "$artist - $title" != "$current_song" ] ; then
+    echo "$artist - $title" > "$dir"/current_song
+    python3 "$cmusicbox" -a "$artist" -l "$album" -t "$title"
+else
+    exit 0
+fi
