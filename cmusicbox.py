@@ -17,12 +17,13 @@ def check_requirements():
 
 
 def check_dir(db_dir):
+    """ create database directory """
     if not os.path.exists(db_dir):
         os.makedirs(db_dir)
 
 
 def create_connection(db_file):
-    """ create a connection to a SQLite database """
+    """ create a connection to the SQLite database """
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -42,7 +43,7 @@ def create_table(conn, create_table_sql):
 
 
 def create_tracks(conn, track):
-    """ insert current song into the database """
+    """ insert or update current song into the database """
     sql = """ INSERT INTO tracks(title, artist_name, album_name, plays) VALUES(?,?,?,?) ON CONFLICT(title) DO UPDATE SET plays=plays+1"""
     cur = conn.cursor()
     cur.execute(sql, track)
@@ -51,7 +52,7 @@ def create_tracks(conn, track):
 
 
 def create_albums(conn, album):
-    """ insert or replace current album into the database """
+    """ insert or update current album into the database """
     sql = """ INSERT INTO albums(title, artist_name, plays) VALUES(?,?,?) ON CONFLICT(title) DO UPDATE SET plays=plays+1"""
     cur = conn.cursor()
     cur.execute(sql, album)
@@ -60,8 +61,8 @@ def create_albums(conn, album):
 
 
 def create_artists(conn, artist):
-    """ insert current artist into the database """
-    sql = """ INSERT INTO artists(name, plays) VALUES(?, 1) ON CONFLICT(name) DO UPDATE SET plays=plays+1"""
+    """ insert or update current artist into the database """
+    sql = """ INSERT INTO artists(name, plays) VALUES(?,?) ON CONFLICT(name) DO UPDATE SET plays=plays+1"""
     cur = conn.cursor()
     cur.execute(sql, artist)
     conn.commit()
@@ -113,13 +114,12 @@ def main():
         create_table(conn, sql_create_albums_table)
         create_table(conn, sql_create_artists_table)
 
-        create_artists(conn, (args.artist,))
+        create_artists(conn, (args.artist, '1'))
         create_albums(conn, (args.album, args.artist, '1'))
         create_tracks(conn, (args.title, args.artist, args.album, '1'))
 
     else:
         print("Cannot create the database connection.")
-
 
 
 if __name__ == "__main__":
