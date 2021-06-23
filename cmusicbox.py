@@ -44,7 +44,9 @@ def create_table(conn, create_table_sql):
 
 def create_tracks(conn, track):
     """ insert or update current song into the database """
-    sql = """ INSERT INTO tracks(title, artist_name, album_name, plays) VALUES(?,?,?,?) ON CONFLICT(title) DO UPDATE SET plays=plays+1"""
+    sql = """ INSERT INTO tracks(title, artist_name, album_name, plays)
+              VALUES(?,?,?,?) ON CONFLICT(artist_name, title)
+              DO UPDATE SET plays=plays+1"""
     cur = conn.cursor()
     cur.execute(sql, track)
     conn.commit()
@@ -53,7 +55,8 @@ def create_tracks(conn, track):
 
 def create_albums(conn, album):
     """ insert or update current album into the database """
-    sql = """ INSERT INTO albums(title, artist_name, plays) VALUES(?,?,?) ON CONFLICT(title) DO UPDATE SET plays=plays+1"""
+    sql = """ INSERT INTO albums(title, artist_name)
+              VALUES(?,?) ON CONFLICT(artist_name, title) DO NOTHING"""
     cur = conn.cursor()
     cur.execute(sql, album)
     conn.commit()
@@ -62,7 +65,7 @@ def create_albums(conn, album):
 
 def create_artists(conn, artist):
     """ insert or update current artist into the database """
-    sql = """ INSERT INTO artists(name, plays) VALUES(?,?) ON CONFLICT(name) DO UPDATE SET plays=plays+1"""
+    sql = """ INSERT INTO artists(name) VALUES(?) ON CONFLICT(name) DO NOTHING"""
     cur = conn.cursor()
     cur.execute(sql, artist)
     conn.commit()
@@ -85,24 +88,24 @@ def main():
     db_file = db_dir+r'/database.db'
 
     sql_create_tracks_table = """ CREATE TABLE IF NOT EXISTS tracks (
-                                      title text PRIMARY KEY,
+                                      title text,
                                       artist_name text,
                                       album_name text,
                                       plays integer,
+                                      PRIMARY KEY (artist_name, title),
                                       FOREIGN KEY (artist_name) REFERENCES artists(name),
                                       FOREIGN KEY (album_name) REFERENCES albums(name)
                                   );"""
 
     sql_create_albums_table = """ CREATE TABLE IF NOT EXISTS albums (
-                                      title text PRIMARY KEY,
+                                      title text,
                                       artist_name text,
-                                      plays integer,
+                                      PRIMARY KEY (artist_name, title),
                                       FOREIGN KEY (artist_name) REFERENCES artists(name)
                                   );"""
 
     sql_create_artists_table = """ CREATE TABLE IF NOT EXISTS artists (
-                                       name text PRIMARY KEY,
-                                       plays integer
+                                       name text PRIMARY KEY
                                    );"""
 
     check_requirements()
@@ -114,8 +117,8 @@ def main():
         create_table(conn, sql_create_albums_table)
         create_table(conn, sql_create_artists_table)
 
-        create_artists(conn, (args.artist, '1'))
-        create_albums(conn, (args.album, args.artist, '1'))
+        create_artists(conn, (args.artist,))
+        create_albums(conn, (args.album, args.artist,))
         create_tracks(conn, (args.title, args.artist, args.album, '1'))
 
     else:

@@ -8,11 +8,12 @@ from tabulate import tabulate
 
 def select_top10_artists(conn, table):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM artists ORDER BY plays DESC LIMIT 10")
+    cur.execute("SELECT artist_name, SUM(plays) FROM tracks GROUP BY artist_name ORDER BY SUM(plays) DESC LIMIT 10")
 
     results = cur.fetchall()
 
-    print(tabulate(results, headers=["Top 10 artists", "Plays"], tablefmt=table))
+    print(tabulate(results, headers=["Top 10 artists", "Plays"],
+                   tablefmt=table))
 
 
 def select_top10_tracks(conn, table):
@@ -20,7 +21,8 @@ def select_top10_tracks(conn, table):
     cur.execute("SELECT * FROM tracks ORDER BY plays DESC LIMIT 10")
 
     results = cur.fetchall()
-    print(tabulate(results, headers=["Top 10 songs", "Artist", "Album", "Plays"], tablefmt=table))
+    print(tabulate(results, headers=["Top 10 songs", "Artist",
+                                     "Album", "Plays"], tablefmt=table))
 
 
 def main():
