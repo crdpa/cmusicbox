@@ -65,7 +65,8 @@ def create_albums(conn, album):
 
 def create_artists(conn, artist):
     """ insert or update current artist into the database """
-    sql = """ INSERT INTO artists(name) VALUES(?) ON CONFLICT(name) DO NOTHING"""
+    sql = """ INSERT INTO artists(name)
+              VALUES(?) ON CONFLICT(name) DO NOTHING"""
     cur = conn.cursor()
     cur.execute(sql, artist)
     conn.commit()

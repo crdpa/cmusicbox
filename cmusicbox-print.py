@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 
 import argparse
-from cmusicbox import check_dir, check_requirements, create_connection
+import os.path
+import sys
+from cmusicbox import check_requirements, create_connection
 from pathlib import Path
 from tabulate import tabulate
 
 
+def check_db(db_file):
+    """ check if database exists """
+    if not os.path.exists(db_file):
+        print("Database not available.")
+        sys.exit()
+
+
 def select_top10_artists(conn, table):
     cur = conn.cursor()
-    cur.execute("SELECT artist_name, SUM(plays) FROM tracks GROUP BY artist_name ORDER BY SUM(plays) DESC LIMIT 10")
+    cur.execute("SELECT artist_name, SUM(plays) FROM tracks GROUP BY \
+                 artist_name ORDER BY SUM(plays) DESC LIMIT 10")
 
     results = cur.fetchall()
 
@@ -35,8 +45,8 @@ def main():
                         help='table format (consult tabulate documentation)')
     args = parser.parse_args()
 
+    check_db(db_file)
     check_requirements()
-    check_dir(db_dir)
     conn = create_connection(db_file)
 
     if conn is not None:
