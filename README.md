@@ -2,7 +2,7 @@
 
 Requer SQLite.
 
-Aplicativo em python para registrar em um banco de dados SQLite as músicas tocadas. Criado para ser utilizado com o aplicativo cmus, mas aceita qualquer um que forneça externamente as informações da música. São necessários os nomes do artista, da música e do álbum.
+Aplicativo em python para registrar em um banco de dados SQLite as músicas tocadas. Criado para ser utilizado com o aplicativo [cmus](https://cmus.github.io/), mas aceita qualquer um que forneça externamente as informações da música. São necessários os nomes do artista, da música e do álbum.
 
     Uso: cmusicbox.py -a 'artista' -l 'álbum' -t 'música'
 
@@ -26,9 +26,9 @@ Visite a documentação do [tabulate](https://pypi.org/project/tabulate/) para d
 
 # cmusicbox
 
-Reqires SQLite.
+Requires SQLite.
 
-Grabs the information of the currently playing song and stores in a SQLite database. I wrote this to use with cmus, but it works with any application that can outputs the song info. It needs the artist name, the album and song titles.
+Grabs the information of the currently playing song and stores in a SQLite database. I wrote this to use with [cmus](https://cmus.github.io/), but it works with any application that can outputs the song info. It needs the artist name, the album and song titles.
 
     Usage: cmusicbox.py -a 'artist' -l 'album' -t 'music'
 
