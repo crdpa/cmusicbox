@@ -28,11 +28,11 @@ def select_top10_artists(conn, table):
 
 def select_top10_tracks(conn, table):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tracks ORDER BY plays DESC LIMIT 10")
+    cur.execute("SELECT title, artist_name, plays FROM tracks ORDER BY plays DESC LIMIT 10")
 
     results = cur.fetchall()
     print(tabulate(results, headers=["Top 10 songs", "Artist",
-                                     "Album", "Plays"], tablefmt=table))
+                                     "Plays"], tablefmt=table))
 
 
 def main():
