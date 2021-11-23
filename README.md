@@ -28,7 +28,7 @@ Visite a documentação do [tabulate](https://pypi.org/project/tabulate/) para d
 
 Requires SQLite.
 
-Grabs the information of the currently playing song and stores in a SQLite database. I wrote this to use with [cmus](https://cmus.github.io/), but it works with any application that can outputs the song info. It needs the artist name, the album and song titles.
+Grabs the information of the currently playing song and stores in a SQLite database. I wrote this to use with [cmus](https://cmus.github.io/), but it works with any application that outputs the song info. It needs the artist name, the album and song titles.
 
     Usage: cmusicbox.py -a 'artist' -l 'album' -t 'music'
 
