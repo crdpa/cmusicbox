@@ -1,3 +1,8 @@
+# Update
+This software is deprecated. Go to [musyca](https://github.com/crdpa/musyca)
+
+Este software está descontinuado. Vá para [musyca](https://github.com/crdpa/musyca)
+
 # cmusicbox
 
 Requer SQLite.
